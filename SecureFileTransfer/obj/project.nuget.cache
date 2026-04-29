@@ -1,14 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "iYbMD1KiyY4=",
+  "dgSpecHash": "AX+QzPoY+BY=",
   "success": true,
-  "projectFilePath": "/Users/shubh/Documents/GitHub/SecureFileTransfer-CLI/SecureFileTransfer/SecureFileTransfer.csproj",
+  "projectFilePath": "/Users/shubh/Documents/GitHub/SecureFileTransfer/SecureFileTransfer/SecureFileTransfer.csproj",
   "expectedPackageFiles": [
-    "/Users/shubh/.nuget/packages/microsoft.net.illink.tasks/9.0.4/microsoft.net.illink.tasks.9.0.4.nupkg.sha512",
-    "/Users/shubh/.nuget/packages/yamldotnet/17.0.1/yamldotnet.17.0.1.nupkg.sha512",
-    "/Users/shubh/.nuget/packages/microsoft.netcore.app.runtime.win-x64/9.0.4/microsoft.netcore.app.runtime.win-x64.9.0.4.nupkg.sha512",
-    "/Users/shubh/.nuget/packages/microsoft.aspnetcore.app.runtime.win-x64/9.0.4/microsoft.aspnetcore.app.runtime.win-x64.9.0.4.nupkg.sha512",
-    "/Users/shubh/.nuget/packages/microsoft.netcore.app.host.win-x64/9.0.4/microsoft.netcore.app.host.win-x64.9.0.4.nupkg.sha512"
+    "/Users/shubh/.nuget/packages/yamldotnet/17.0.1/yamldotnet.17.0.1.nupkg.sha512"
   ],
   "logs": []
 }

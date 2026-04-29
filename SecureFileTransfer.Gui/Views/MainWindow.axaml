@@ -1,0 +1,36 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:SecureFileTransfer.Gui.ViewModels"
+        x:Class="SecureFileTransfer.Gui.Views.MainWindow"
+        x:DataType="vm:MainWindowViewModel"
+        Width="800"
+        Height="500"
+        Title="Secure File Transfer">
+
+    <Design.DataContext>
+        <vm:MainWindowViewModel />
+    </Design.DataContext>
+
+    <StackPanel Margin="30" Spacing="16">
+        <TextBlock Text="Secure File Transfer"
+                   FontSize="32"
+                   FontWeight="Bold" />
+
+        <Border Padding="20" CornerRadius="12" BorderThickness="1">
+            <StackPanel Spacing="8">
+                <TextBlock Text="Local Host" FontSize="20" FontWeight="Bold" />
+                <TextBlock Text="{Binding HostName}" />
+                <TextBlock Text="{Binding IPv4}" />
+            </StackPanel>
+        </Border>
+
+        <Button Content="Reload Host Info"
+                Command="{Binding LoadHostInfoCommand}" />
+        
+        
+        <Button Content="Start Host"
+                Command="{Binding StartHostCommand}" />
+
+        <TextBlock Text="{Binding StatusMessage}" />
+    </StackPanel>
+</Window>

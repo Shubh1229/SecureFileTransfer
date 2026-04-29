@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "/Users/shubh/Documents/GitHub/SecureFileTransfer-CLI/SecureFileTransfer/SecureFileTransfer.csproj": {}
+    "/Users/shubh/Documents/GitHub/SecureFileTransfer/SecureFileTransfer/SecureFileTransfer.csproj": {}
   },
   "projects": {
-    "/Users/shubh/Documents/GitHub/SecureFileTransfer-CLI/SecureFileTransfer/SecureFileTransfer.csproj": {
+    "/Users/shubh/Documents/GitHub/SecureFileTransfer/SecureFileTransfer/SecureFileTransfer.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/Users/shubh/Documents/GitHub/SecureFileTransfer-CLI/SecureFileTransfer/SecureFileTransfer.csproj",
-        "projectName": "sft",
-        "projectPath": "/Users/shubh/Documents/GitHub/SecureFileTransfer-CLI/SecureFileTransfer/SecureFileTransfer.csproj",
+        "projectUniqueName": "/Users/shubh/Documents/GitHub/SecureFileTransfer/SecureFileTransfer/SecureFileTransfer.csproj",
+        "projectName": "SecureFileTransfer",
+        "projectPath": "/Users/shubh/Documents/GitHub/SecureFileTransfer/SecureFileTransfer/SecureFileTransfer.csproj",
         "packagesPath": "/Users/shubh/.nuget/packages/",
-        "outputPath": "/Users/shubh/Documents/GitHub/SecureFileTransfer-CLI/SecureFileTransfer/obj/",
+        "outputPath": "/Users/shubh/Documents/GitHub/SecureFileTransfer/SecureFileTransfer/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "/Users/shubh/.nuget/NuGet/NuGet.Config"
@@ -45,12 +45,6 @@
         "net9.0": {
           "targetAlias": "net9.0",
           "dependencies": {
-            "Microsoft.NET.ILLink.Tasks": {
-              "suppressParent": "All",
-              "target": "Package",
-              "version": "[9.0.4, )",
-              "autoReferenced": true
-            },
             "YamlDotNet": {
               "target": "Package",
               "version": "[17.0.1, )"
@@ -67,31 +61,12 @@
           ],
           "assetTargetFallback": true,
           "warn": true,
-          "downloadDependencies": [
-            {
-              "name": "Microsoft.AspNetCore.App.Runtime.win-x64",
-              "version": "[9.0.4, 9.0.4]"
-            },
-            {
-              "name": "Microsoft.NETCore.App.Host.win-x64",
-              "version": "[9.0.4, 9.0.4]"
-            },
-            {
-              "name": "Microsoft.NETCore.App.Runtime.win-x64",
-              "version": "[9.0.4, 9.0.4]"
-            }
-          ],
           "frameworkReferences": {
             "Microsoft.NETCore.App": {
               "privateAssets": "all"
             }
           },
           "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/9.0.203/PortableRuntimeIdentifierGraph.json"
-        }
-      },
-      "runtimes": {
-        "win-x64": {
-          "#import": []
         }
       }
     }
