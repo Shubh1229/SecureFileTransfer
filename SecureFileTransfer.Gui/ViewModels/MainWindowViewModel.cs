@@ -51,8 +51,9 @@ public partial class MainWindowViewModel : ObservableObject
 
             Task.Run(() =>
             {
-                HostService service = new();
-                service.StartHost(host);
+                
+                GUI_HostService service = new();
+                service.StartHostAsync(host, AppPaths.FindFilePathConfig).Wait();
             });
 
             StatusMessage = $"Hosting on {host.IPv4}";

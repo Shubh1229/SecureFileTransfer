@@ -10,13 +10,14 @@ namespace SecureFileTransfer.src.protocols
 {
     public static class HandshakeProtocol
     {
-        public static bool SendHandShake(HostModel host, NetworkStream stream)
+        public static bool SendHandShake(HostModel host, NetworkStream stream, Action<string>? onStatusUpdate = null)
         {
             HandshakeModel handshake = new()
             {
                 SenderName = host.HostName,
                 SenderIPv4 = host.IPv4,
-                SenderIPv6 = host.IPv6
+                SenderIPv6 = host.IPv6,
+                SenderPort = host.Port
             };
 
             DebugLogger.Log("Client sending handshake message.");
@@ -26,7 +27,6 @@ namespace SecureFileTransfer.src.protocols
             if (string.IsNullOrWhiteSpace(messageRead))
             {
                 DebugLogger.Log("Client never received handshake return.");
-                Console.WriteLine("Never received handshake return.");
                 return false;
             }
 
@@ -34,19 +34,16 @@ namespace SecureFileTransfer.src.protocols
             if (receivedHandshake == null)
             {
                 DebugLogger.Log("Client failed to parse handshake return.");
-                Console.WriteLine("Failed to parse handshake return.");
                 return false;
             }
 
             DebugLogger.Log($"Handshake completed with {receivedHandshake.SenderName} ({receivedHandshake.SenderIPv4})");
-            Console.WriteLine("Handshake completed.");
-            Console.WriteLine($"Remote name: {receivedHandshake.SenderName}");
-            Console.WriteLine($"Remote IPv4: {receivedHandshake.SenderIPv4}");
+            onStatusUpdate?.Invoke($"Handshake completed with {receivedHandshake.SenderName} ({receivedHandshake.SenderIPv4})");
 
             return true;
         }
         
-        public static ConnectionLogModel? ReadHandshake(HostModel host, NetworkStream stream)
+        public static ConnectionLogModel? ReadHandshake(HostModel host, NetworkStream stream, Action<string>? onStatusUpdate = null)
         {
             DebugLogger.Log("Host waiting for handshake message.");
             string? messageRead = MessageHelper.ReadMessage(stream);
@@ -54,7 +51,6 @@ namespace SecureFileTransfer.src.protocols
             if (string.IsNullOrWhiteSpace(messageRead))
             {
                 DebugLogger.Log("Host never received handshake.");
-                Console.WriteLine("Never received handshake.");
                 return null;
             }
 
@@ -62,7 +58,6 @@ namespace SecureFileTransfer.src.protocols
             if (receivedHandshake == null)
             {
                 DebugLogger.Log("Host failed to parse handshake.");
-                Console.WriteLine("Failed to parse handshake.");
                 return null;
             }
 
@@ -94,6 +89,8 @@ namespace SecureFileTransfer.src.protocols
             DebugLogger.Log("Host sending handshake response.");
             MessageHelper.SendMessage(stream, handshake.ToJson());
 
+            onStatusUpdate?.Invoke($"Handshake completed with {receivedHandshake.SenderName} ({receivedHandshake.SenderIPv4})");
+
             return new ConnectionLogModel()
             {
                 RemoteComputerName = receivedHandshake.SenderName,
@@ -108,7 +105,8 @@ namespace SecureFileTransfer.src.protocols
             {
                 PeerName = receivedHandshake.SenderName,
                 IPv4 = receivedHandshake.SenderIPv4,
-                IPv6 = receivedHandshake.SenderIPv6
+                IPv6 = receivedHandshake.SenderIPv6,
+                Port = receivedHandshake.SenderPort
             });
 
             host.Peers = peers.ToArray();

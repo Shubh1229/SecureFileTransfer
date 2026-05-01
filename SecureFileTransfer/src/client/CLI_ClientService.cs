@@ -8,7 +8,7 @@ using SecureFileTransfer.src.setup;
 
 namespace SecureFileTransfer.src.client
 {
-    public class ClientService
+    public class CLI_ClientService
     {
         private readonly int PORT = 5000;
 

@@ -61,7 +61,8 @@ namespace SecureFileTransfer.src.host
                         {
                             PeerName = peerName,
                             IPv4 = ipv4,
-                            IPv6 = ipv6
+                            IPv6 = ipv6,
+                            Port = 5000
                         });
 
                         host.Peers = peers.ToArray();

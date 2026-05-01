@@ -40,8 +40,6 @@ namespace SecureFileTransfer.src.protocols
 
                     totalPlainBytesSent += bytesRead;
                     chunkCount++;
-
-                    Console.Write($"\rSending: {totalPlainBytesSent}/{fileStream.Length} bytes");
                 }
 
                 stream.Flush();
@@ -116,7 +114,7 @@ namespace SecureFileTransfer.src.protocols
                     totalPlainBytesWritten += plainChunk.Length;
                     chunkCount++;
 
-                    Console.Write($"\rReceiving: {totalPlainBytesWritten}/{fileSizeBytes} bytes");
+                    
                 }
 
                 fileStream.Flush();

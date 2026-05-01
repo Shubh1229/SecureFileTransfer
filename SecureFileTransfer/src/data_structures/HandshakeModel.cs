@@ -9,6 +9,8 @@ namespace SecureFileTransfer.src.data_structures
         public string SenderIPv4 { get; set; } = "";
         public string SenderIPv6 { get; set; } = "";
 
+        public int SenderPort { get; set; } = 5000;
+
         public string ToJson()
         {
             return JsonSerializer.Serialize<HandshakeModel>(this);

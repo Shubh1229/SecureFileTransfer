@@ -53,5 +53,39 @@ namespace SecureFileTransfer.src.setup
         {
             return PathToConfig;
         }
+
+        public static int GetPort()
+        {
+            AppPaths.EnsureAppDirectoryExists();
+            int port = Load().Port;
+            DebugLogger.Log($"HostConfigManager retrieved port: {port}");
+            return port;
+        }
+        public static void SetPort(int port)
+        {
+            HostModel host = Load();
+            host.Port = port;
+            Save(host);
+            DebugLogger.Log($"HostConfigManager set port to: {port}");
+        }
+        public static string GetIPv6()
+        {
+            AppPaths.EnsureAppDirectoryExists();
+            string ipv6 = Load().IPv6;
+            if (string.IsNullOrWhiteSpace(ipv6))
+            {
+                DebugLogger.Log("HostConfigManager retrieved empty IPv6 address.");
+                return "";
+            }
+            DebugLogger.Log($"HostConfigManager retrieved IPv4: {ipv6}");
+            return ipv6;
+        }
+        public static void SetIPv6(string ipv6)
+        {
+            HostModel host = Load();
+            host.IPv6 = ipv6;
+            Save(host);
+            DebugLogger.Log($"HostConfigManager set IPv6 to: {ipv6}");
+        }
     }
 }

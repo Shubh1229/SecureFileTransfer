@@ -84,6 +84,7 @@ namespace SecureFileTransfer.src.setup
                 FullHostName = fullHostName,
                 IPv4 = IPv4_address,
                 IPv6 = IPv6_address,
+                Port = 5000,
                 Peers = Array.Empty<PeersModel>()
             };
 

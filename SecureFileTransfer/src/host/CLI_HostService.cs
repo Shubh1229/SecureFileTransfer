@@ -9,7 +9,7 @@ using SecureFileTransfer.src.setup;
 
 namespace SecureFileTransfer.src.host
 {
-    public class HostService
+    public class CLI_HostService
     {
         private readonly int PORT = 5000;
 
