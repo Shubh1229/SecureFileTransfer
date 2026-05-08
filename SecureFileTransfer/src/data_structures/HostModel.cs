@@ -14,6 +14,8 @@ namespace SecureFileTransfer.src.data_structures
 
         public required int Port { get; set; } = 5000;
 
+        public string IdentityPublicKey { get; set; } = "";
+
         public required PeersModel[] Peers { get; set; }
 
         public void PrintInfo()

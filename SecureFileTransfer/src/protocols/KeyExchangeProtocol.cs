@@ -4,6 +4,7 @@ using SecureFileTransfer.src.data_structures;
 using SecureFileTransfer.src.helper;
 using SecureFileTransfer.src.logging;
 using SecureFileTransfer.src.security;
+using SecureFileTransfer.src.setup;
 
 namespace SecureFileTransfer.src.protocols
 {
@@ -14,10 +15,12 @@ namespace SecureFileTransfer.src.protocols
             using var clientKeyPair = KeyExchangeService.CreateKeyPair();
 
             byte[] clientPublicKey = KeyExchangeService.ExportPublicKey(clientKeyPair);
+            string localIdentityKey = HostConfigManager.Load().IdentityPublicKey;
 
             KeyExchangeModel clientKeyExchange = new()
             {
-                PublicKeyBase64 = Convert.ToBase64String(clientPublicKey)
+                PublicKeyBase64 = Convert.ToBase64String(clientPublicKey),
+                IdentityPublicKeyBase64 = localIdentityKey
             };
 
             string clientJson = JsonSerializer.Serialize(clientKeyExchange);
@@ -45,9 +48,14 @@ namespace SecureFileTransfer.src.protocols
 
             byte[] hostPublicKey = Convert.FromBase64String(hostKeyExchange.PublicKeyBase64);
             byte[] aesKey = KeyExchangeService.DeriveSharedKey(clientKeyPair, hostPublicKey);
-            string fingerprint = KeyExchangeService.ComputeFingerprint(hostPublicKey);
 
-            DebugLogger.Log($"Client session key established. Host fingerprint: {fingerprint}");
+            // Fingerprint the persistent identity key for TOFU, not the ephemeral session key.
+            string fingerprint = string.IsNullOrWhiteSpace(hostKeyExchange.IdentityPublicKeyBase64)
+                ? KeyExchangeService.ComputeFingerprint(hostPublicKey)
+                : KeyExchangeService.ComputeFingerprint(
+                    Convert.FromBase64String(hostKeyExchange.IdentityPublicKeyBase64));
+
+            DebugLogger.Log($"Client session key established. Host identity fingerprint: {fingerprint}");
 
             return new SessionKeyModel
             {
@@ -79,12 +87,13 @@ namespace SecureFileTransfer.src.protocols
             }
 
             byte[] clientPublicKey = Convert.FromBase64String(clientKeyExchange.PublicKeyBase64);
-
             byte[] hostPublicKey = KeyExchangeService.ExportPublicKey(hostKeyPair);
+            string localIdentityKey = HostConfigManager.Load().IdentityPublicKey;
 
             KeyExchangeModel hostKeyExchange = new()
             {
-                PublicKeyBase64 = Convert.ToBase64String(hostPublicKey)
+                PublicKeyBase64 = Convert.ToBase64String(hostPublicKey),
+                IdentityPublicKeyBase64 = localIdentityKey
             };
 
             string hostJson = JsonSerializer.Serialize(hostKeyExchange);
@@ -93,9 +102,14 @@ namespace SecureFileTransfer.src.protocols
             MessageHelper.SendMessage(stream, hostJson);
 
             byte[] aesKey = KeyExchangeService.DeriveSharedKey(hostKeyPair, clientPublicKey);
-            string fingerprint = KeyExchangeService.ComputeFingerprint(clientPublicKey);
 
-            DebugLogger.Log($"Host session key established. Client fingerprint: {fingerprint}");
+            // Fingerprint the persistent identity key for TOFU, not the ephemeral session key.
+            string fingerprint = string.IsNullOrWhiteSpace(clientKeyExchange.IdentityPublicKeyBase64)
+                ? KeyExchangeService.ComputeFingerprint(clientPublicKey)
+                : KeyExchangeService.ComputeFingerprint(
+                    Convert.FromBase64String(clientKeyExchange.IdentityPublicKeyBase64));
+
+            DebugLogger.Log($"Host session key established. Client identity fingerprint: {fingerprint}");
 
             return new SessionKeyModel
             {

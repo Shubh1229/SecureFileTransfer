@@ -1,6 +1,7 @@
 using System.Net;
 using System.Net.NetworkInformation;
 using System.Net.Sockets;
+using System.Security.Cryptography;
 using SecureFileTransfer.src.data_structures;
 using SecureFileTransfer.src.logging;
 using YamlDotNet.Serialization;
@@ -121,6 +122,24 @@ namespace SecureFileTransfer.src.setup
 
                 if (changed)
                     HostConfigManager.Save(existing);
+            }
+
+            // Generate a persistent identity public key if this host doesn't have one yet.
+            // This key is stable across sessions and is used for TOFU fingerprinting.
+            // Ephemeral ECDH keys (generated per-session) are used for the actual key exchange.
+            HostModel cfg = HostConfigManager.Load();
+            if (string.IsNullOrWhiteSpace(cfg.IdentityPublicKey))
+            {
+                using var identityKey = ECDiffieHellman.Create(ECCurve.NamedCurves.nistP256);
+                cfg.IdentityPublicKey = Convert.ToBase64String(
+                    identityKey.PublicKey.ExportSubjectPublicKeyInfo());
+
+                // Wipe stale fingerprints — they were based on ephemeral keys and are now invalid.
+                foreach (var peer in cfg.Peers)
+                    peer.PublicKeyFingerprint = "";
+
+                HostConfigManager.Save(cfg);
+                DebugLogger.Log($"Generated persistent identity public key: {cfg.IdentityPublicKey[..16]}...");
             }
 
             path = AppPaths.TransferLogsPath;
