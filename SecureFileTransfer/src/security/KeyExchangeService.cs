@@ -19,12 +19,15 @@ namespace SecureFileTransfer.src.security
             using ECDiffieHellman remotePublicKey = ECDiffieHellman.Create();
             remotePublicKey.ImportSubjectPublicKeyInfo(remotePublicKeyBytes, out _);
 
-            return keyPair.DeriveKeyMaterial(remotePublicKey.PublicKey);
+            return keyPair.DeriveKeyFromHash(remotePublicKey.PublicKey, HashAlgorithmName.SHA256);
         }
 
-        public static byte[] DeriveAesKey(byte[] sharedSecret)
+        // SHA-256 of the DER-encoded SubjectPublicKeyInfo bytes, formatted as colon-separated hex pairs.
+        // Example: "ab:12:cd:34:..."  (matches SSH fingerprint style)
+        public static string ComputeFingerprint(byte[] publicKeyBytes)
         {
-            return SHA256.HashData(sharedSecret);
+            byte[] hash = SHA256.HashData(publicKeyBytes);
+            return string.Join(":", hash.Select(b => b.ToString("x2")));
         }
     }
 }

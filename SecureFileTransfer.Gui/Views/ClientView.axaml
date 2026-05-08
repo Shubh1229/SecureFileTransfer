@@ -1,0 +1,72 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:SecureFileTransfer.Gui.ViewModels"
+             x:Class="SecureFileTransfer.Gui.Views.ClientView"
+             x:CompileBindings="False"
+             x:DataType="vm:ClientViewModel">
+
+    <ScrollViewer>
+        <StackPanel Margin="30" Spacing="20">
+
+            <!-- Header -->
+            <StackPanel Orientation="Horizontal" Spacing="12">
+                <Button Content="← Back" Command="{Binding NavigateBackCommand}"/>
+                <TextBlock Text="Send Files"
+                           FontSize="24"
+                           FontWeight="Bold"
+                           VerticalAlignment="Center"/>
+            </StackPanel>
+
+            <!-- Peer Selection -->
+            <Border Padding="16" CornerRadius="8" BorderThickness="1">
+                <StackPanel Spacing="10">
+                    <TextBlock Text="Select Peer" FontWeight="SemiBold" FontSize="16"/>
+                    <ComboBox ItemsSource="{Binding Peers}"
+                              SelectedItem="{Binding SelectedPeer}"
+                              HorizontalAlignment="Stretch">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding PeerName}"/>
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
+                    <TextBlock Text="{Binding SelectedPeer.IPv4}" Opacity="0.6" FontSize="12"/>
+                </StackPanel>
+            </Border>
+
+            <!-- File Selection -->
+            <Border Padding="16" CornerRadius="8" BorderThickness="1">
+                <StackPanel Spacing="10">
+                    <TextBlock Text="Files to Send" FontWeight="SemiBold" FontSize="16"/>
+                    <ItemsControl ItemsSource="{Binding SelectedFiles}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding}" TextWrapping="Wrap" Margin="0,2" FontSize="12"/>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                    <StackPanel Orientation="Horizontal" Spacing="10">
+                        <Button Content="Add Files" Click="AddFiles_Click"/>
+                        <Button Content="Clear" Command="{Binding ClearSelectedFilesCommand}"/>
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+
+            <!-- Send Controls -->
+            <Border Padding="16" CornerRadius="8" BorderThickness="1">
+                <StackPanel Spacing="12">
+                    <Button Content="Send Files"
+                            Command="{Binding StartClientCommand}"
+                            HorizontalAlignment="Left"/>
+                    <ProgressBar Minimum="0"
+                                 Maximum="100"
+                                 Height="20"
+                                 Value="{Binding ClientProgressValue}"/>
+                    <TextBlock Text="{Binding ClientStatusMessage}" TextWrapping="Wrap"/>
+                </StackPanel>
+            </Border>
+
+        </StackPanel>
+    </ScrollViewer>
+
+</UserControl>

@@ -24,7 +24,6 @@ namespace SecureFileTransfer.src.protocols
             MessageHelper.SendEncryptedMessage(stream, json, sessionKey);
 
             DebugLogger.Log($"Sent encrypted transfer plan for {fileCount} file(s).");
-            Console.WriteLine($"Sent transfer plan for {fileCount} file(s).");
         }
 
         public static TransferPlanModel? Read(
@@ -38,7 +37,6 @@ namespace SecureFileTransfer.src.protocols
             if (string.IsNullOrWhiteSpace(json))
             {
                 DebugLogger.Log("No encrypted transfer plan received.");
-                Console.WriteLine("No transfer plan received.");
                 return null;
             }
 
@@ -47,7 +45,6 @@ namespace SecureFileTransfer.src.protocols
             if (plan == null)
             {
                 DebugLogger.Log("Failed to deserialize encrypted transfer plan.");
-                Console.WriteLine("Failed to deserialize transfer plan.");
                 return null;
             }
 

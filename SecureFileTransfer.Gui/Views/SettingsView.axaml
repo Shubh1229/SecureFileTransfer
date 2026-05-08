@@ -1,0 +1,96 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:SecureFileTransfer.Gui.ViewModels"
+             x:Class="SecureFileTransfer.Gui.Views.SettingsView"
+             x:DataType="vm:SettingsViewModel">
+
+    <ScrollViewer>
+        <StackPanel Margin="30" Spacing="20">
+
+            <!-- Header -->
+            <StackPanel Orientation="Horizontal" Spacing="12">
+                <Button Content="← Back" Command="{Binding NavigateBackCommand}"/>
+                <TextBlock Text="Settings"
+                           FontSize="24"
+                           FontWeight="Bold"
+                           VerticalAlignment="Center"/>
+            </StackPanel>
+
+            <!-- Network -->
+            <Border Padding="16" CornerRadius="8" BorderThickness="1">
+                <StackPanel Spacing="10">
+                    <TextBlock Text="Network" FontWeight="SemiBold" FontSize="16"/>
+                    <StackPanel Orientation="Horizontal" Spacing="10" VerticalAlignment="Center">
+                        <TextBlock Text="Port:" VerticalAlignment="Center"/>
+                        <TextBox Text="{Binding Port}" Width="100"/>
+                        <Button Content="Save" Command="{Binding SavePortCommand}"/>
+                    </StackPanel>
+                    <TextBlock Text="{Binding PortStatusMessage}" Opacity="0.7" FontSize="12"/>
+                </StackPanel>
+            </Border>
+
+            <!-- Download Folder -->
+            <Border Padding="16" CornerRadius="8" BorderThickness="1">
+                <StackPanel Spacing="10">
+                    <TextBlock Text="Download Folder" FontWeight="SemiBold" FontSize="16"/>
+                    <TextBlock Text="{Binding DownloadPath}" TextWrapping="Wrap" Opacity="0.8"/>
+                    <Button Content="Choose Folder" Click="ChooseDownloadFolder_Click"/>
+                </StackPanel>
+            </Border>
+
+            <!-- Peers -->
+            <Border Padding="16" CornerRadius="8" BorderThickness="1">
+                <StackPanel Spacing="12">
+                    <TextBlock Text="Peers" FontWeight="SemiBold" FontSize="16"/>
+
+                    <!-- Runtime bindings needed for PeersModel field access and parent command -->
+                    <ItemsControl ItemsSource="{Binding Peers}" x:CompileBindings="False">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Border Padding="10" Margin="0,4" CornerRadius="6" BorderThickness="1">
+                                    <Grid ColumnDefinitions="*,Auto">
+                                        <StackPanel Grid.Column="0" Spacing="2">
+                                            <TextBlock Text="{Binding PeerName}" FontWeight="SemiBold"/>
+                                            <TextBlock Text="{Binding IPv4}" FontSize="12" Opacity="0.7"/>
+                                            <TextBlock FontSize="12" Opacity="0.7">
+                                                <Run Text="Port: "/>
+                                                <Run Text="{Binding Port}"/>
+                                            </TextBlock>
+                                        </StackPanel>
+                                        <Button Grid.Column="1"
+                                                Content="Remove"
+                                                VerticalAlignment="Center"
+                                                Command="{Binding $parent[UserControl].DataContext.RemovePeerCommand}"
+                                                CommandParameter="{Binding}"/>
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+
+                    <!-- Add Peer Form -->
+                    <Border Padding="12" CornerRadius="6" BorderThickness="1">
+                        <StackPanel Spacing="8">
+                            <TextBlock Text="Add New Peer" FontWeight="SemiBold"/>
+                            <Grid ColumnDefinitions="60,*" RowDefinitions="Auto,Auto,Auto" HorizontalAlignment="Left">
+                                <TextBlock Grid.Row="0" Grid.Column="0" Text="Name:" VerticalAlignment="Center" Margin="0,0,10,6"/>
+                                <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding NewPeerName}" Width="220" Margin="0,0,0,6"/>
+                                <TextBlock Grid.Row="1" Grid.Column="0" Text="IPv4:" VerticalAlignment="Center" Margin="0,0,10,6"/>
+                                <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding NewPeerIPv4}" Width="220" Margin="0,0,0,6"/>
+                                <TextBlock Grid.Row="2" Grid.Column="0" Text="Port:" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                                <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding NewPeerPort}" Width="100"/>
+                            </Grid>
+                            <StackPanel Orientation="Horizontal" Spacing="10">
+                                <Button Content="Add Peer" Command="{Binding AddPeerCommand}"/>
+                                <TextBlock Text="{Binding PeerStatusMessage}" VerticalAlignment="Center" Opacity="0.7" FontSize="12"/>
+                            </StackPanel>
+                        </StackPanel>
+                    </Border>
+
+                </StackPanel>
+            </Border>
+
+        </StackPanel>
+    </ScrollViewer>
+
+</UserControl>

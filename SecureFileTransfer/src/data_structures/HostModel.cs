@@ -12,7 +12,9 @@ namespace SecureFileTransfer.src.data_structures
         public required string IPv4 {get;set;}
         public required string IPv6 {get;set;}
 
-        public required PeersModel[] Peers {get;set;}
+        public required int Port { get; set; } = 5000;
+
+        public required PeersModel[] Peers { get; set; }
 
         public void PrintInfo()
         {
@@ -20,6 +22,7 @@ namespace SecureFileTransfer.src.data_structures
             Console.WriteLine($"Full Host Name: {FullHostName}");
             Console.WriteLine($"IPv4 Address: {IPv4}");
             Console.WriteLine($"IPv6 Address: {IPv6}");
+            Console.WriteLine($"Port: {Port}");
             Console.WriteLine("Peers: ");
             foreach (PeersModel peer in Peers)
             {

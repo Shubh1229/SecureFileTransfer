@@ -78,35 +78,58 @@ namespace SecureFileTransfer.src.setup
                 }
             }
 
-            HostModel host = new()
-            {
-                HostName = hostName,
-                FullHostName = fullHostName,
-                IPv4 = IPv4_address,
-                IPv6 = IPv6_address,
-                Peers = Array.Empty<PeersModel>()
-            };
-
-            var serializer = new SerializerBuilder()
-                .WithNamingConvention(CamelCaseNamingConvention.Instance)
-                .Build();
-
-            string yaml = serializer.Serialize(host);
-
             path = AppPaths.HostConfigPath;
             if (!File.Exists(path))
             {
-                File.WriteAllText(path, yaml);
+                HostModel host = new()
+                {
+                    HostName = hostName,
+                    FullHostName = fullHostName,
+                    IPv4 = IPv4_address,
+                    IPv6 = IPv6_address,
+                    Port = 5000,
+                    Peers = Array.Empty<PeersModel>()
+                };
+
+                var serializer = new SerializerBuilder()
+                    .WithNamingConvention(CamelCaseNamingConvention.Instance)
+                    .Build();
+
+                File.WriteAllText(path, serializer.Serialize(host));
                 DebugLogger.Log("Created host.yaml");
             }
+            else
+            {
+                HostModel existing = HostConfigManager.Load();
+                bool changed = false;
 
-            TransferHistoryModel logs = new();
-            yaml = serializer.Serialize(logs);
+                if (existing.IPv4 != IPv4_address)
+                {
+                    existing.IPv4 = IPv4_address;
+                    changed = true;
+                    DebugLogger.Log($"Updated IPv4 in host.yaml: {IPv4_address}");
+                    Console.WriteLine($"Updated IPv4: {IPv4_address}");
+                }
+
+                if (existing.IPv6 != IPv6_address)
+                {
+                    existing.IPv6 = IPv6_address;
+                    changed = true;
+                    DebugLogger.Log($"Updated IPv6 in host.yaml: {IPv6_address}");
+                    Console.WriteLine($"Updated IPv6: {IPv6_address}");
+                }
+
+                if (changed)
+                    HostConfigManager.Save(existing);
+            }
 
             path = AppPaths.TransferLogsPath;
             if (!File.Exists(path))
             {
-                File.WriteAllText(path, yaml);
+                var logsSerializer = new SerializerBuilder()
+                    .WithNamingConvention(CamelCaseNamingConvention.Instance)
+                    .Build();
+                File.WriteAllText(path, logsSerializer.Serialize(new TransferHistoryModel()));
                 DebugLogger.Log("Created transfer_logs.yaml");
             }
 

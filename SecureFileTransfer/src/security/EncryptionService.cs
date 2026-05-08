@@ -1,5 +1,4 @@
 using System.Security.Cryptography;
-using System.Text;
 
 namespace SecureFileTransfer.src.security
 {
@@ -8,13 +7,13 @@ namespace SecureFileTransfer.src.security
         private const int NonceSize = 12;
         private const int TagSize = 16;
 
-        public static byte[] Encrypt(byte[] plainBytes, byte[] key)
+        public static byte[] Encrypt(byte[] plainBytes, SessionKeyModel sessionKey)
         {
-            byte[] nonce = RandomNumberGenerator.GetBytes(NonceSize);
+            byte[] nonce = sessionKey.NextNonce();
             byte[] cipherBytes = new byte[plainBytes.Length];
             byte[] tag = new byte[TagSize];
 
-            using AesGcm aes = new(key, TagSize);
+            using AesGcm aes = new(sessionKey.Key, TagSize);
             aes.Encrypt(nonce, plainBytes, cipherBytes, tag);
 
             return nonce.Concat(tag).Concat(cipherBytes).ToArray();

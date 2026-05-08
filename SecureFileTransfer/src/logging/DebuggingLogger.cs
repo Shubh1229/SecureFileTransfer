@@ -5,13 +5,18 @@ namespace SecureFileTransfer.src.logging
     public static class DebugLogger
     {
         private static readonly string PathToLog = AppPaths.DebugLogPath;
+        private static readonly object _lock = new();
 
         public static void Log(string message)
         {
             AppPaths.EnsureAppDirectoryExists();
 
             string line = $"[{DateTime.UtcNow:yyyy-MM-dd HH:mm:ss.fff} UTC] {message}";
-            File.AppendAllText(PathToLog, line + Environment.NewLine);
+
+            lock (_lock)
+            {
+                File.AppendAllText(PathToLog, line + Environment.NewLine);
+            }
         }
 
         public static void LogError(string context, Exception ex)
@@ -21,7 +26,10 @@ namespace SecureFileTransfer.src.logging
             string line =
                 $"[{DateTime.UtcNow:yyyy-MM-dd HH:mm:ss.fff} UTC] ERROR in {context}: {ex.Message}{Environment.NewLine}{ex}";
 
-            File.AppendAllText(PathToLog, line + Environment.NewLine + Environment.NewLine);
+            lock (_lock)
+            {
+                File.AppendAllText(PathToLog, line + Environment.NewLine + Environment.NewLine);
+            }
         }
 
         public static string GetPath()

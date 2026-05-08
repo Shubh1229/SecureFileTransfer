@@ -72,13 +72,13 @@ namespace SecureFileTransfer.src.start
                         break;
 
                     case 3:
-                        HostService service = new();
+                        CLI_HostService service = new();
                         service.StartHost(host);
                         DebugLogger.Log("Returned from HostService.StartHost.");
                         break;
 
                     case 4:
-                        ClientService client = new();
+                        CLI_ClientService client = new();
                         client.StartClient(host);
                         DebugLogger.Log("Returned from ClientService.StartClient.");
                         break;

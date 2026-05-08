@@ -8,7 +8,7 @@ using SecureFileTransfer.src.setup;
 
 namespace SecureFileTransfer.src.client
 {
-    public class ClientService
+    public class CLI_ClientService
     {
         private readonly int PORT = 5000;
 
@@ -114,6 +114,22 @@ namespace SecureFileTransfer.src.client
                     Console.WriteLine("Key exchange failed...");
                     return;
                 }
+
+                TofuResult tofu = HostConfigManager.ValidateAndStorePeerFingerprint(
+                    peer.IPv4,
+                    sessionKey.RemotePublicKeyFingerprint
+                );
+
+                if (tofu == TofuResult.Mismatch)
+                {
+                    logger.FinishConnection(connectionLog, false);
+                    DebugLogger.Log($"TOFU mismatch on client — aborting connection to {peer.IPv4}");
+                    Console.WriteLine("WARNING: Host fingerprint has changed — possible man-in-the-middle attack. Connection aborted.");
+                    return;
+                }
+
+                if (tofu == TofuResult.TrustedFirstUse)
+                    Console.WriteLine($"Host trusted on first use.\nFingerprint: {sessionKey.RemotePublicKeyFingerprint}");
 
                 DebugLogger.Log("Client key exchange completed successfully.");
 

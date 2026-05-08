@@ -20,7 +20,7 @@ namespace SecureFileTransfer.src.protocols
             {
                 FileName = fileStats.Name,
                 FileSizeBytes = fileStats.Length,
-                RelativeSourcePath = selectedFile,
+                RelativeSourcePath = "",
                 SuggestedSaveName = fileStats.Name
             };
 
@@ -29,10 +29,6 @@ namespace SecureFileTransfer.src.protocols
             MessageHelper.SendEncryptedMessage(stream, json, sessionKey);
 
             DebugLogger.Log($"Sent encrypted file info: {file.FileName}, {file.FileSizeBytes} bytes");
-
-            Console.WriteLine("Sent file info:");
-            Console.WriteLine($"Name: {file.FileName}");
-            Console.WriteLine($"Size: {file.FileSizeBytes}");
         }
 
         public static FileInfoModel? Read(
@@ -46,7 +42,6 @@ namespace SecureFileTransfer.src.protocols
             if (string.IsNullOrWhiteSpace(json))
             {
                 DebugLogger.Log("No encrypted file info received.");
-                Console.WriteLine("No file info received.");
                 return null;
             }
 
@@ -55,16 +50,10 @@ namespace SecureFileTransfer.src.protocols
             if (fileInfo == null)
             {
                 DebugLogger.Log("Failed to deserialize encrypted file info.");
-                Console.WriteLine("Failed to deserialize file info.");
                 return null;
             }
 
             DebugLogger.Log($"Received encrypted file info: {fileInfo.FileName}, {fileInfo.FileSizeBytes} bytes");
-
-            Console.WriteLine("\nIncoming file info:");
-            Console.WriteLine($"Name: {fileInfo.FileName}");
-            Console.WriteLine($"Size: {fileInfo.FileSizeBytes} bytes");
-            Console.WriteLine($"Suggested Save Name: {fileInfo.SuggestedSaveName}");
 
             return fileInfo;
         }

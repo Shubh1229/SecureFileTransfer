@@ -1,0 +1,52 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:SecureFileTransfer.Gui.ViewModels"
+             x:Class="SecureFileTransfer.Gui.Views.HostView"
+             x:DataType="vm:HostViewModel">
+
+    <ScrollViewer>
+        <StackPanel Margin="30" Spacing="20">
+
+            <!-- Header -->
+            <StackPanel Orientation="Horizontal" Spacing="12">
+                <Button Content="← Back" Command="{Binding NavigateBackCommand}"/>
+                <TextBlock Text="Host / Receive Files"
+                           FontSize="24"
+                           FontWeight="Bold"
+                           VerticalAlignment="Center"/>
+            </StackPanel>
+
+            <!-- Machine Info -->
+            <Border Padding="16" CornerRadius="8" BorderThickness="1">
+                <StackPanel Spacing="6">
+                    <TextBlock Text="Local Machine" FontWeight="SemiBold" FontSize="16"/>
+                    <TextBlock Text="{Binding HostName}"/>
+                    <TextBlock Text="{Binding IPv4}" Opacity="0.7"/>
+                </StackPanel>
+            </Border>
+
+            <!-- Download Folder -->
+            <Border Padding="16" CornerRadius="8" BorderThickness="1">
+                <StackPanel Spacing="10">
+                    <TextBlock Text="Download Folder" FontWeight="SemiBold" FontSize="16"/>
+                    <TextBlock Text="{Binding DownloadPath}" TextWrapping="Wrap" Opacity="0.8"/>
+                    <Button Content="Choose Folder" Click="ChooseDownloadFolder_Click"/>
+                </StackPanel>
+            </Border>
+
+            <!-- Host Controls -->
+            <Border Padding="16" CornerRadius="8" BorderThickness="1">
+                <StackPanel Spacing="12">
+                    <StackPanel Orientation="Horizontal" Spacing="10">
+                        <Button Content="Start Host" Command="{Binding StartHostCommand}"/>
+                        <Button Content="Stop Host" Command="{Binding StopHostCommand}"/>
+                    </StackPanel>
+                    <ProgressBar Minimum="0" Maximum="100" Height="20" Value="{Binding HostProgressValue}"/>
+                    <TextBlock Text="{Binding HostStatusMessage}" TextWrapping="Wrap"/>
+                </StackPanel>
+            </Border>
+
+        </StackPanel>
+    </ScrollViewer>
+
+</UserControl>
