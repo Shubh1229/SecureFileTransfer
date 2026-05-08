@@ -5,6 +5,7 @@ SecureFileTransfer/data/.data/
 # Ignore build artifacts
 **/bin/
 **/obj/
+**/publish/
 
 # Ignore Claude Code project data
 .claude/
