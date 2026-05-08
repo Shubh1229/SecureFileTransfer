@@ -44,14 +44,15 @@ namespace SecureFileTransfer.src.protocols
             }
 
             byte[] hostPublicKey = Convert.FromBase64String(hostKeyExchange.PublicKeyBase64);
-            byte[] sharedSecret = KeyExchangeService.DeriveSharedKey(clientKeyPair, hostPublicKey);
-            byte[] aesKey = KeyExchangeService.DeriveAesKey(sharedSecret);
+            byte[] aesKey = KeyExchangeService.DeriveSharedKey(clientKeyPair, hostPublicKey);
+            string fingerprint = KeyExchangeService.ComputeFingerprint(hostPublicKey);
 
-            DebugLogger.Log("Client session key established.");
+            DebugLogger.Log($"Client session key established. Host fingerprint: {fingerprint}");
 
             return new SessionKeyModel
             {
-                Key = aesKey
+                Key = aesKey,
+                RemotePublicKeyFingerprint = fingerprint
             };
         }
 
@@ -91,14 +92,15 @@ namespace SecureFileTransfer.src.protocols
             DebugLogger.Log("Host sending public key.");
             MessageHelper.SendMessage(stream, hostJson);
 
-            byte[] sharedSecret = KeyExchangeService.DeriveSharedKey(hostKeyPair, clientPublicKey);
-            byte[] aesKey = KeyExchangeService.DeriveAesKey(sharedSecret);
+            byte[] aesKey = KeyExchangeService.DeriveSharedKey(hostKeyPair, clientPublicKey);
+            string fingerprint = KeyExchangeService.ComputeFingerprint(clientPublicKey);
 
-            DebugLogger.Log("Host session key established.");
+            DebugLogger.Log($"Host session key established. Client fingerprint: {fingerprint}");
 
             return new SessionKeyModel
             {
-                Key = aesKey
+                Key = aesKey,
+                RemotePublicKeyFingerprint = fingerprint
             };
         }
     }

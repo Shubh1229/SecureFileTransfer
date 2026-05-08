@@ -15,7 +15,7 @@ namespace SecureFileTransfer.src.start
 
             Console.Clear();
 
-            string path = Path.Combine(Directory.GetCurrentDirectory(), "data", ".data", "host.yaml");
+            string path = AppPaths.HostConfigPath;
             DebugLogger.Log($"Checking for host config at: {path}");
 
             if (!File.Exists(path))

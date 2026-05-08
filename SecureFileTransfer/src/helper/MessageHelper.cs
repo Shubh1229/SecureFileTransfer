@@ -7,6 +7,7 @@ namespace SecureFileTransfer.src.helper
 {
     public static class MessageHelper
     {
+        private const int MaxPayloadLength = 16 * 1024 * 1024;
         public static void SendMessage(NetworkStream stream, string json)
         {
             byte[] payload = Encoding.UTF8.GetBytes(json);
@@ -43,7 +44,7 @@ namespace SecureFileTransfer.src.helper
             }
 
             byte[] plainBytes = Encoding.UTF8.GetBytes(plainText);
-            byte[] encryptedBytes = EncryptionService.Encrypt(plainBytes, sessionKey.Key);
+            byte[] encryptedBytes = EncryptionService.Encrypt(plainBytes, sessionKey);
 
             SendBytesWithLengthPrefix(stream, encryptedBytes);
 
@@ -92,7 +93,8 @@ namespace SecureFileTransfer.src.helper
 
         public static void SendBytesWithLengthPrefix(NetworkStream stream, byte[] payload)
         {
-            byte[] lengthPrefix = BitConverter.GetBytes(payload.Length);
+            byte[] lengthPrefix = new byte[4];
+            System.Buffers.Binary.BinaryPrimitives.WriteInt32LittleEndian(lengthPrefix, payload.Length);
 
             stream.Write(lengthPrefix, 0, lengthPrefix.Length);
             stream.Write(payload, 0, payload.Length);
@@ -109,9 +111,9 @@ namespace SecureFileTransfer.src.helper
                 return null;
             }
 
-            int payloadLength = BitConverter.ToInt32(lengthBuffer, 0);
+            int payloadLength = System.Buffers.Binary.BinaryPrimitives.ReadInt32LittleEndian(lengthBuffer);
 
-            if (payloadLength <= 0)
+            if (payloadLength <= 0 || payloadLength > MaxPayloadLength)
             {
                 DebugLogger.Log($"MessageHelper.ReadBytesWithLengthPrefix got invalid payload length={payloadLength}");
                 return null;

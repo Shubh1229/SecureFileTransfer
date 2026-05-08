@@ -96,6 +96,25 @@ namespace SecureFileTransfer.src.host
                     return;
                 }
 
+                TofuResult tofu = HostConfigManager.ValidateAndStorePeerFingerprint(
+                    connection.RemoteIPv4,
+                    sessionKey.RemotePublicKeyFingerprint
+                );
+
+                if (tofu == TofuResult.Mismatch)
+                {
+                    logger.FinishConnection(connection, false);
+                    logger.SaveConnection(connection);
+                    connectionSaved = true;
+
+                    DebugLogger.Log($"TOFU mismatch on host — aborting connection from {connection.RemoteIPv4}");
+                    Console.WriteLine("WARNING: Client fingerprint has changed — possible man-in-the-middle attack. Connection aborted.");
+                    return;
+                }
+
+                if (tofu == TofuResult.TrustedFirstUse)
+                    Console.WriteLine($"Client trusted on first use.\nFingerprint: {sessionKey.RemotePublicKeyFingerprint}");
+
                 DebugLogger.Log("Host key exchange completed successfully.");
 
                 DebugLogger.Log("Waiting for encrypted transfer plan.");

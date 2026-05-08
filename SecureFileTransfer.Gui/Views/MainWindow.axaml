@@ -3,34 +3,72 @@
         xmlns:vm="using:SecureFileTransfer.Gui.ViewModels"
         x:Class="SecureFileTransfer.Gui.Views.MainWindow"
         x:DataType="vm:MainWindowViewModel"
-        Width="800"
-        Height="500"
+        Width="900"
+        Height="600"
         Title="Secure File Transfer">
 
     <Design.DataContext>
         <vm:MainWindowViewModel />
     </Design.DataContext>
 
-    <StackPanel Margin="30" Spacing="16">
+    <StackPanel Margin="30" Spacing="20">
+
+        <!-- Title -->
         <TextBlock Text="Secure File Transfer"
                    FontSize="32"
                    FontWeight="Bold" />
 
+        <!-- Host Info -->
         <Border Padding="20" CornerRadius="12" BorderThickness="1">
             <StackPanel Spacing="8">
-                <TextBlock Text="Local Host" FontSize="20" FontWeight="Bold" />
+                <TextBlock Text="Local Host"
+                           FontSize="20"
+                           FontWeight="Bold" />
+
                 <TextBlock Text="{Binding HostName}" />
                 <TextBlock Text="{Binding IPv4}" />
             </StackPanel>
         </Border>
 
+        <!-- Host Controls -->
+        <Border Padding="20" CornerRadius="12" BorderThickness="1">
+            <StackPanel Spacing="12">
+
+                <TextBlock Text="Host / Receive Files"
+                        FontSize="20"
+                        FontWeight="Bold" />
+
+                <TextBlock Text="Download Folder:" FontWeight="Bold" />
+                <TextBlock Text="{Binding DownloadPath}"
+                        TextWrapping="Wrap" />
+
+                <Button Content="Choose Download Folder"
+                        Click="ChooseDownloadFolder_Click" />
+
+                <StackPanel Orientation="Horizontal" Spacing="10">
+                    <Button Content="Start Host"
+                            Command="{Binding StartHostCommand}" />
+                            <!-- IsEnabled="{Binding IsHostRunning, Converter={StaticResource InverseBoolConverter}}"/> -->
+
+                    <Button Content="Stop Host"
+                            Command="{Binding StopHostCommand}" />
+                </StackPanel>
+
+                <ProgressBar Minimum="0"
+                            Maximum="100"
+                            Height="20"
+                            Value="{Binding HostProgressValue}" />
+
+                <TextBlock Text="{Binding HostStatusMessage}"
+                        TextWrapping="Wrap" />
+
+            </StackPanel>
+        </Border>
+
+        <!-- Reload Button -->
         <Button Content="Reload Host Info"
                 Command="{Binding LoadHostInfoCommand}" />
-        
-        
-        <Button Content="Start Host"
-                Command="{Binding StartHostCommand}" />
 
-        <TextBlock Text="{Binding StatusMessage}" />
     </StackPanel>
 </Window>
+

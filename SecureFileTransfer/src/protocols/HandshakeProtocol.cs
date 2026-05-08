@@ -2,7 +2,6 @@
 using System.Net.Sockets;
 using SecureFileTransfer.src.data_structures;
 using SecureFileTransfer.src.helper;
-using SecureFileTransfer.src.host;
 using SecureFileTransfer.src.logging;
 using SecureFileTransfer.src.setup;
 
@@ -76,7 +75,7 @@ namespace SecureFileTransfer.src.protocols
             if (!hasPeer)
             {
                 DebugLogger.Log("Peer not found in host config. Adding peer.");
-                AddPeer(host, receivedHandshake);
+                AddPeer(receivedHandshake);
             }
 
             HandshakeModel handshake = new()
@@ -98,20 +97,15 @@ namespace SecureFileTransfer.src.protocols
                 RemoteIPv6 = receivedHandshake.SenderIPv6
             };
         }
-        private static void AddPeer(HostModel host, HandshakeModel receivedHandshake)
+        private static void AddPeer(HandshakeModel receivedHandshake)
         {
-            var peers = host.Peers.ToList();
-            peers.Add(new PeersModel()
+            HostConfigManager.AddPeerIfNew(new PeersModel
             {
                 PeerName = receivedHandshake.SenderName,
                 IPv4 = receivedHandshake.SenderIPv4,
                 IPv6 = receivedHandshake.SenderIPv6,
                 Port = receivedHandshake.SenderPort
             });
-
-            host.Peers = peers.ToArray();
-            HostConfigManager.Save(host);
-            DebugLogger.Log($"Peer added and host config saved: {receivedHandshake.SenderName} ({receivedHandshake.SenderIPv4})");
         }
     }
 }

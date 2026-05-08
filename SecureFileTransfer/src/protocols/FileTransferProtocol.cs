@@ -34,7 +34,7 @@ namespace SecureFileTransfer.src.protocols
                 while ((bytesRead = fileStream.Read(buffer, 0, buffer.Length)) > 0)
                 {
                     byte[] plainChunk = buffer[..bytesRead];
-                    byte[] encryptedChunk = EncryptionService.Encrypt(plainChunk, sessionKey.Key);
+                    byte[] encryptedChunk = EncryptionService.Encrypt(plainChunk, sessionKey);
 
                     MessageHelper.SendBytesWithLengthPrefix(stream, encryptedChunk);
 
@@ -43,7 +43,6 @@ namespace SecureFileTransfer.src.protocols
                 }
 
                 stream.Flush();
-                Console.WriteLine();
 
                 DebugLogger.Log(
                     $"Sent encrypted file: {selectedFile}. plainBytes={totalPlainBytesSent}, chunks={chunkCount}"
@@ -118,7 +117,6 @@ namespace SecureFileTransfer.src.protocols
                 }
 
                 fileStream.Flush();
-                Console.WriteLine();
 
                 DebugLogger.Log(
                     $"Received encrypted file into: {destinationPath}. plainBytes={totalPlainBytesWritten}, chunks={chunkCount}"
