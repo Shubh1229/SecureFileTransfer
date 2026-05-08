@@ -11,64 +11,34 @@
         <vm:MainWindowViewModel />
     </Design.DataContext>
 
-    <StackPanel Margin="30" Spacing="20">
+    <DockPanel>
 
-        <!-- Title -->
-        <TextBlock Text="Secure File Transfer"
-                   FontSize="32"
-                   FontWeight="Bold" />
-
-        <!-- Host Info -->
-        <Border Padding="20" CornerRadius="12" BorderThickness="1">
-            <StackPanel Spacing="8">
-                <TextBlock Text="Local Host"
-                           FontSize="20"
-                           FontWeight="Bold" />
-
-                <TextBlock Text="{Binding HostName}" />
-                <TextBlock Text="{Binding IPv4}" />
+        <!-- Persistent footer on every page -->
+        <Border DockPanel.Dock="Bottom"
+                Padding="12,8"
+                BorderThickness="0,1,0,0">
+            <StackPanel Orientation="Horizontal"
+                        HorizontalAlignment="Center"
+                        Spacing="8">
+                <TextBlock Text="Made by Arihant Singh"
+                           VerticalAlignment="Center"
+                           Opacity="0.7"
+                           FontSize="12"/>
+                <TextBlock Text="·"
+                           VerticalAlignment="Center"
+                           Opacity="0.4"
+                           FontSize="12"/>
+                <HyperlinkButton Content="GitHub"
+                                 NavigateUri="https://github.com/Shubh1229/SecureFileTransfer"
+                                 VerticalAlignment="Center"
+                                 FontSize="12"/>
             </StackPanel>
         </Border>
 
-        <!-- Host Controls -->
-        <Border Padding="20" CornerRadius="12" BorderThickness="1">
-            <StackPanel Spacing="12">
+        <!-- Active page resolved by ViewLocator -->
+        <ContentControl Content="{Binding CurrentPage}"/>
 
-                <TextBlock Text="Host / Receive Files"
-                        FontSize="20"
-                        FontWeight="Bold" />
+    </DockPanel>
 
-                <TextBlock Text="Download Folder:" FontWeight="Bold" />
-                <TextBlock Text="{Binding DownloadPath}"
-                        TextWrapping="Wrap" />
-
-                <Button Content="Choose Download Folder"
-                        Click="ChooseDownloadFolder_Click" />
-
-                <StackPanel Orientation="Horizontal" Spacing="10">
-                    <Button Content="Start Host"
-                            Command="{Binding StartHostCommand}" />
-                            <!-- IsEnabled="{Binding IsHostRunning, Converter={StaticResource InverseBoolConverter}}"/> -->
-
-                    <Button Content="Stop Host"
-                            Command="{Binding StopHostCommand}" />
-                </StackPanel>
-
-                <ProgressBar Minimum="0"
-                            Maximum="100"
-                            Height="20"
-                            Value="{Binding HostProgressValue}" />
-
-                <TextBlock Text="{Binding HostStatusMessage}"
-                        TextWrapping="Wrap" />
-
-            </StackPanel>
-        </Border>
-
-        <!-- Reload Button -->
-        <Button Content="Reload Host Info"
-                Command="{Binding LoadHostInfoCommand}" />
-
-    </StackPanel>
 </Window>
 

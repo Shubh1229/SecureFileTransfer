@@ -38,25 +38,31 @@ namespace SecureFileTransfer.src.host
                 onStatusUpdate?.Invoke($"Listening on {host.IPv4}:{port}...");
                 DebugLogger.Log($"TCP listener started on {host.IPv4}:{port}");
 
-                while (!cancellationToken.IsCancellationRequested)
+                try
                 {
-                    onStatusUpdate?.Invoke("Waiting for client...");
+                    while (!cancellationToken.IsCancellationRequested)
+                    {
+                        onStatusUpdate?.Invoke("Waiting for client...");
 
-                    TcpClient client = await tcp.AcceptTcpClientAsync(cancellationToken);
+                        TcpClient client = await tcp.AcceptTcpClientAsync(cancellationToken);
 
-                    onStatusUpdate?.Invoke("Client connected!");
+                        onStatusUpdate?.Invoke("Client connected!");
 
-                    _ = HandleClientAsync(
-                        client,
-                        host,
-                        downloadPath,
-                        onStatusUpdate,
-                        onProgressUpdate,
-                        cancellationToken
-                    );
+                        _ = HandleClientAsync(
+                            client,
+                            host,
+                            downloadPath,
+                            onStatusUpdate,
+                            onProgressUpdate,
+                            cancellationToken
+                        );
+                    }
                 }
-
-                tcp.Stop();
+                finally
+                {
+                    tcp.Stop();
+                    DebugLogger.Log("TCP listener stopped.");
+                }
             }
             catch (OperationCanceledException)
             {
